@@ -18,13 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/pauldaniv/yellow-taxi-scripts/build:latest
-#      credentials:
-#        username: ${GITHUB_USER:-${{ github.actor }}}
-#        password: ${{ secrets.GITHUB_TOKEN }}
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Sync
-        run: terraform init && terraform apply --auto-approve && terraform destroy --auto-approve
+        run: "echo 'Use to create infra:  terraform init && terraform apply --auto-approve && terraform destroy --auto-approve'"
