@@ -18,8 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/pauldaniv/yellow-taxi-scripts/build:latest
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
     steps:
       - name: Checkout
         uses: actions/checkout@v3
