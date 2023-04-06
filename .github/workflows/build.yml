@@ -12,14 +12,15 @@ on:
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  GITHUB_USER: ${{ secrets.GITHUB_USER }}
 jobs:
   publish:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/pauldaniv/yellow-taxi-scripts/build:latest
-      registry:
-        username: ${${{ secrets.GITHUB_TOKEN }}:-${{ github.actor }}}
-        password: ${{ secrets.GITHUB_TOKEN }}
+#      credentials:
+#        username: ${GITHUB_USER:-${{ github.actor }}}
+#        password: ${{ secrets.GITHUB_TOKEN }}
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
     steps:
