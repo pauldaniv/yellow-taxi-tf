@@ -13,6 +13,21 @@ resource "random_string" "suffix" {
   special = false
 }
 
+resource "aws_ecr_repository" "build" {
+  name                 = "build"
+  image_tag_mutability = "MUTABLE"
+}
+
+resource "aws_ecr_repository" "taxi-trip-client" {
+  name                 = "taxi-trip-client"
+  image_tag_mutability = "MUTABLE"
+}
+
+resource "aws_ecr_repository" "taxi-trip-api" {
+  name                 = "taxi-trip-api"
+  image_tag_mutability = "MUTABLE"
+}
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "3.19.0"
