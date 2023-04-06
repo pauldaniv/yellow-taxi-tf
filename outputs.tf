@@ -14,6 +14,6 @@ output "region" {
 }
 
 output "cluster_name" {
-  description = "Kubernetes Cluster Name"
+  description = "Promotion (Yellow Taxi Service)"
   value       = module.eks.cluster_name
 }

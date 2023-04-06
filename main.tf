@@ -16,19 +16,19 @@ resource "random_string" "suffix" {
 resource "aws_ecr_repository" "build" {
   name                 = "build"
   image_tag_mutability = "MUTABLE"
-  force_destroy        = true
+  force_delete        = true
 }
 
 resource "aws_ecr_repository" "taxi-trip-client" {
   name                 = "taxi-trip-client"
   image_tag_mutability = "MUTABLE"
-  force_destroy        = true
+  force_delete        = true
 }
 
 resource "aws_ecr_repository" "taxi-trip-api" {
   name                 = "taxi-trip-api"
   image_tag_mutability = "MUTABLE"
-  force_destroy        = true
+  force_delete        = true
 }
 
 module "vpc" {
@@ -63,7 +63,7 @@ module "eks" {
   version = "19.5.1"
 
   cluster_name    = local.cluster_name
-  cluster_version = "1.24"
+  cluster_version = "1.25"
 
   vpc_id                         = module.vpc.vpc_id
   subnet_ids                     = module.vpc.private_subnets
