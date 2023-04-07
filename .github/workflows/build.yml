@@ -17,7 +17,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/pauldaniv/yellow-taxi-scripts/build:latest
+      image: ghcr.io/pauldaniv/yellow-taxi-scripts/terraform:latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
