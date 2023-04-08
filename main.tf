@@ -2,6 +2,11 @@ provider "aws" {
   region = var.region
 }
 
+provider "aws" {
+  alias  = "us-east-2"
+  region = "us-east-2"
+}
+
 data "aws_availability_zones" "available" {}
 
 locals {
@@ -13,10 +18,79 @@ resource "random_string" "suffix" {
   special = false
 }
 
-resource "aws_ecr_repository" "build" {
-  name                 = "build"
-  image_tag_mutability = "MUTABLE"
-  force_delete        = true
+resource "aws_kms_key" "codeartifact" {
+  provider                = aws.us-east-2
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+  tags                    = merge({ "Name" = "codeartifact" }, var.tags)
+}
+
+resource "aws_codeartifact_domain" "promotion" {
+  provider       = aws.us-east-2
+  domain         = "promotion"
+  encryption_key = aws_kms_key.codeartifact.arn
+  tags           = merge({ "Name" = "codeartifact" }, var.tags)
+}
+
+resource "aws_codeartifact_repository" "releases" {
+  repository  = "releases"
+  domain      = aws_codeartifact_domain.promotion.domain
+  description = "Repository to install maven artifacts into"
+  tags        = merge({ "Name" = "maven"}, var.tags)
+}
+
+data "aws_iam_policy_document" "codeartifact_repo_policy" {
+  statement {
+    effect = "Allow"
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    actions   = [
+      "codeartifact:DescribePackageVersion",
+      "codeartifact:DescribeRepository",
+      "codeartifact:GetPackageVersionReadme",
+      "codeartifact:GetRepositoryEndpoint",
+      "codeartifact:ListPackageVersionAssets",
+      "codeartifact:ListPackageVersionDependencies",
+      "codeartifact:ListPackageVersions",
+      "codeartifact:ListPackages",
+      "codeartifact:PublishPackageVersion",
+      "codeartifact:PutPackageMetadata",
+      "codeartifact:ReadFromRepository"
+    ]
+    resources = [aws_codeartifact_domain.promotion.arn]
+  }
+}
+
+resource "aws_codeartifact_domain_permissions_policy" "promotion" {
+  domain          = aws_codeartifact_domain.promotion.domain
+  policy_document = data.aws_iam_policy_document.codeartifact_repo_policy.json
+}
+
+data "aws_iam_policy_document" "codeartifact_domain_policy" {
+  statement {
+    effect = "Allow"
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    actions   = [
+      "codeartifact:CreateRepository",
+      "codeartifact:DescribeDomain",
+      "codeartifact:GetAuthorizationToken",
+      "codeartifact:GetDomainPermissionsPolicy",
+      "codeartifact:ListRepositoriesInDomain",
+      "sts:GetServiceBearerToken"
+    ]
+    resources = [aws_codeartifact_domain.promotion.arn]
+  }
+}
+
+resource "aws_codeartifact_repository_permissions_policy" "promotion" {
+  domain          = aws_codeartifact_domain.promotion.domain
+  policy_document = data.aws_iam_policy_document.codeartifact_domain_policy.json
+  repository      = aws_codeartifact_repository.releases.repository
 }
 
 resource "aws_ecr_repository" "taxi-trip-client" {
