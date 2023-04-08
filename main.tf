@@ -32,7 +32,7 @@ resource "aws_codeartifact_domain" "promotion" {
   tags           = merge({ "Name" = "codeartifact" }, var.tags)
 }
 
-resource "aws_codeartifact_repository" "releases" {
+resource "aws_codeartifact_repository" "promotion" {
   repository  = "releases"
   domain      = aws_codeartifact_domain.promotion.domain
   description = "Repository to install maven artifacts into"
@@ -59,7 +59,7 @@ data "aws_iam_policy_document" "codeartifact_repo_policy" {
       "codeartifact:PutPackageMetadata",
       "codeartifact:ReadFromRepository"
     ]
-    resources = [aws_codeartifact_domain.promotion.arn]
+    resources = ["*"]
   }
 }
 
@@ -90,7 +90,7 @@ data "aws_iam_policy_document" "codeartifact_domain_policy" {
 resource "aws_codeartifact_repository_permissions_policy" "promotion" {
   domain          = aws_codeartifact_domain.promotion.domain
   policy_document = data.aws_iam_policy_document.codeartifact_domain_policy.json
-  repository      = aws_codeartifact_repository.releases.repository
+  repository      = aws_codeartifact_repository.promotion.repository
 }
 
 resource "aws_ecr_repository" "taxi-trip-client" {
