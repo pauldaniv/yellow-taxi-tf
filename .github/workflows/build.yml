@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Sync
-        run: "echo 'Use to create infra:  terraform init && terraform apply --auto-approve && terraform destroy --auto-approve'"
+        run: ./bin/manage_state.sh apply
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

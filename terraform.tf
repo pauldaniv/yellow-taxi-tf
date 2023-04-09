@@ -6,6 +6,14 @@ terraform {
     }
   }
 */
+  backend "s3" {
+    bucket         = "yellow-taxi-tf-state"
+    key            = "prod/terraform.tfstate"
+    region         = "us-east-2"
+    encrypt        = true
+    dynamodb_table = "yellow-taxi-tf-state"
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
