@@ -1,6 +1,6 @@
 
 locals {
-  cluster_name = "education-eks-${random_string.suffix.result}"
+  cluster_name = "yellow-taxi"
 }
 
 data "aws_iam_policy_document" "assume_role" {
