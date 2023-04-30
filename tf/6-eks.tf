@@ -21,8 +21,15 @@ resource "aws_iam_role_policy_attachment" "yellow-taxi-AwsEksClusterPolicy" {
   role       = aws_iam_role.yellow-taxi.name
 }
 
+variable "cluster_name" {
+  default = "yellow-taxi"
+  type = string
+  description = "AWS EKS CLuster Name"
+  nullable = false
+}
+
 resource "aws_eks_cluster" "yellow-taxi" {
-  name     = "yellow-taxi"
+  name     = var.cluster_name
   role_arn = aws_iam_role.yellow-taxi.arn
 
   vpc_config {
