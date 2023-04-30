@@ -1,3 +1,4 @@
+
 resource "aws_codeartifact_domain" "promotion" {
   provider       = aws.us-east-2
   domain         = "promotion"
