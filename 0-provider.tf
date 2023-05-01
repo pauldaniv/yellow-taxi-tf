@@ -1,8 +1,16 @@
 provider "aws" {
-  region = "us-east-1"
+  alias  = "us-east-2"
+  region = "us-east-2"
 }
 
 terraform {
+  backend "s3" {
+    bucket         = "yellow-taxi-tf-state"
+    key            = "prod/terraform.tfstate"
+    region         = "us-east-2"
+    encrypt        = true
+    dynamodb_table = "yellow-taxi-tf-state"
+  }
   required_providers {
     kubectl = {
       source  = "gavinbunney/kubectl"
@@ -14,5 +22,5 @@ terraform {
     }
   }
 
-  required_version = "~> 1.0"
+  required_version = "~> 1.3"
 }
