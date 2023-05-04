@@ -10,8 +10,6 @@ if [[ -z "$ACTION" ]]; then
   exit 1
 fi
 
-env | grep AWS
-
 if [[ "$ACTION" = "apply" ]]; then
   echo "Creating infrastructure"
   terraform init
