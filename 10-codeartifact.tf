@@ -1,6 +1,6 @@
 
 resource "aws_codeartifact_domain" "promotion" {
-  provider       = aws.us-east-1
+  provider       = aws.us-east-2
   domain         = "promotion"
   encryption_key = aws_kms_key.codeartifact.arn
   tags           = merge({ "Name" = "codeartifact" }, var.tags)
