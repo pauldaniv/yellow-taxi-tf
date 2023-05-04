@@ -9,7 +9,7 @@ if [[ -z "$ACTION" ]]; then
   echo "Action not specified. $AVAILABLE_ACTIONS"
   exit 1
 fi
-
+aws sts get-caller-identity
 if [[ "$ACTION" = "apply" ]]; then
   echo "Creating infrastructure"
   terraform init
