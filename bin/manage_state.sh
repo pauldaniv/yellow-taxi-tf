@@ -13,11 +13,11 @@ fi
 
 if [[ "$ACTION" = "apply" ]]; then
   echo "Creating infrastructure"
-  if [[ "$SCRATCH" ]]; then
+  if [[ "$SCRATCH" = "scratch" ]]; then
     echo "Creating setup from scratch!"
     echo "Creating additional unmanaged resources for terraform..."
     echo "Creating dynamoDB table for locking..."
-    aws dynamodb create-table --cli-input-json file://state_table.json --region us-east-2
+    aws dynamodb create-table --cli-input-json file://state_table.json --region us-east-1
   fi
   terraform init
   terraform apply --auto-approve
@@ -28,7 +28,7 @@ elif [[ "$ACTION" = "destroy" ]]; then
   if [[ "$SCRATCH" ]]; then
     echo "Deleting all related resources to this setup!"
     echo "Destroying additional unmanaged resources"
-    aws dynamodb delete-table --table-name yellow-taxi-tf-state --region us-east-2
+    aws dynamodb delete-table --table-name yellow-taxi-tf-state --region us-east-1
   fi
 else
   echo "Unknown action provided: $ACTION. $AVAILABLE_ACTIONS"
