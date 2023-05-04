@@ -1,4 +1,6 @@
-# Learn Terraform - Provision an EKS Cluster
+#Yellow-Taxi promotion project
 
-This repo is a companion repo to the [Provision an EKS Cluster tutorial](https://developer.hashicorp.com/terraform/tutorials/kubernetes/eks), containing
-Terraform configuration files to provision an EKS cluster on AWS.
+Run to init lock table for terraform:
+```shell
+aws dynamodb create-table --cli-input-json file://state_table.json --region us-east-2
+```
