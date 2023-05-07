@@ -32,7 +32,7 @@ module "eks" {
     }
 
     spot = {
-      desired_size = 1
+      desired_size = 3
       min_size     = 0
       max_size     = 6
 
