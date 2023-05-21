@@ -8,7 +8,7 @@ data "aws_secretsmanager_secret_version" "db" {
   secret_id = "prot_yt_db"
 }
 
-resource "aws_db_instance" "postgres" {
+resource "aws_db_instance" "mydb" {
   db_name           = "service"
   engine            = "postgres"
   engine_version    = "15"
@@ -24,5 +24,5 @@ resource "aws_db_instance" "postgres" {
 }
 
 output "db_instance_url" {
-  value = aws_db_instance.postgres.endpoint
+  value = aws_db_instance.mydb.endpoint
 }
