@@ -14,6 +14,7 @@ if [[ "$ACTION" = "apply" ]]; then
   echo "Creating infrastructure"
   terraform init --migrate-state
   terraform apply --auto-approve
+  terraform output
 elif [[ "$ACTION" = "destroy" ]]; then
   echo "Destroying infrastructure"
   terraform init
