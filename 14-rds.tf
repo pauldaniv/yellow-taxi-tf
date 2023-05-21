@@ -4,14 +4,8 @@ resource "aws_db_subnet_group" "public" {
 }
 
 
-data "aws_secretsmanager_secret_version" "creds" {
-  secret_id = "db-creds-v1"
-}
-
-locals {
-  db_creds = jsondecode(
-    data.aws_secretsmanager_secret_version.creds.secret_string
-  )
+data "aws_secretsmanager_secret_version" "db" {
+  secret_id = "prot_yt_db"
 }
 
 resource "aws_db_instance" "mydb" {
@@ -25,6 +19,6 @@ resource "aws_db_instance" "mydb" {
   skip_final_snapshot  = true
   db_subnet_group_name = aws_db_subnet_group.public.name
 
-  username = local.db_creds.username
-  password = local.db_creds.password
+  username = "service"
+  password = data.aws_secretsmanager_secret_version.db.secret_string
 }
