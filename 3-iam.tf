@@ -77,21 +77,49 @@ module "eks_admins_iam_group" {
   custom_group_policy_arns          = [module.allow_assume_eks_admins_iam_policy.arn]
 }
 
-data "aws_iam_policy_document" "service-account-secrets" {
+data "aws_iam_policy_document" "service-account-secrets-policy" {
   statement {
+    effect  = "Allow"
     actions = [
       "secretsmanager:GetSecretValue",
       "secretsmanager:DescribeSecret"
     ]
-    effect  = "Allow"
     resources = ["arn:aws:secretsmanager:us-east-2:375158168967:secret:prot_yt*"]
   }
 }
 
-resource "aws_iam_role" "service-secrets-access" {
-  assume_role_policy = data.aws_iam_policy_document.service-account-secrets.json
-  name               = "yt-service-secrets-access-role"
-  tags = {
+data "aws_iam_policy_document" "assume-service-account-secrets-policy" {
+  statement {
+    effect  = "Allow"
+    actions = [
+      "sts:AssumeRoleWithWebIdentity"
+    ]
+    principals {
+      type        = "Federated"
+      identifiers = [module.eks.oidc_provider_arn]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "${module.eks.cluster_oidc_issuer_url}:sub"
+      values   = [
+        "system:serviceaccount:yellow-taxi:yellow-taxi:api-service-account",
+        "system:serviceaccount:yellow-taxi:yellow-taxi:facade-service-account",
+        "system:serviceaccount:yellow-taxi:yellow-taxi:totals-service-account"
+      ]
+    }
+  }
+}
+
+resource "aws_iam_role" "eks_service_account_role" {
+  name               = "eks-service-account-role"
+  assume_role_policy = data.aws_iam_policy_document.assume-service-account-secrets-policy.json
+  tags               = {
     Project = "yellow-taxi"
   }
+}
+
+resource "aws_iam_policy_attachment" "my_policy_attachment" {
+  name       = "eks_service_account_role_attachment"
+  roles      = [aws_iam_role.eks_service_account_role.name]
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
 }
