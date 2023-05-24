@@ -82,7 +82,7 @@ resource "aws_iam_role" "service-secrets-access" {
   name        = "yt-service-secrets-access-policy"
   description = "Policy that allows kubernetes cluster services to access secrets"
 
-  policy = jsonencode({
+  role = jsonencode({
     Version = "2012-10-17"
     Statement : [
       {
