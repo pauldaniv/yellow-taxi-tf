@@ -85,7 +85,7 @@ data "aws_iam_policy_document" "service-account-secrets-policy" {
       "secretsmanager:GetSecretValue",
       "secretsmanager:DescribeSecret"
     ]
-    resources = ["arn:aws:secretsmanager:us-east-2:375158168967:secret:prot_yt*"]
+    resources = ["arn:aws:secretsmanager:us-east-2:375158168967:secret:prod_yt*"]
   }
 }
 
