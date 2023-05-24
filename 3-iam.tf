@@ -77,25 +77,20 @@ module "eks_admins_iam_group" {
   custom_group_policy_arns          = [module.allow_assume_eks_admins_iam_policy.arn]
 }
 
+data "aws_iam_policy_document" "service-account-secrets" {
+  statement {
+    actions = [
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret"
+    ]
+    effect  = "Allow"
+    resources = ["arn:aws:secretsmanager:us-east-2:375158168967:secret:prot_yt*"]
+  }
+}
 
 resource "aws_iam_role" "service-secrets-access" {
-  name        = "yt-service-secrets-access-policy"
-  description = "Policy that allows kubernetes cluster services to access secrets"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement : [
-      {
-        Effect : "Allow",
-        Action : [
-          "secretsmanager:GetSecretValue",
-          "secretsmanager:DescribeSecret"
-        ],
-        Resource : ["arn:aws:secretsmanager:us-east-2:375158168967:secret:prot_yt*"]
-      }
-    ]
-  })
-
+  assume_role_policy = data.aws_iam_policy_document.service-account-secrets.json
+  name               = "yt-service-secrets-access-role"
   tags = {
     Project = "yellow-taxi"
   }
