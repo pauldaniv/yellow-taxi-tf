@@ -101,12 +101,17 @@ data "aws_iam_policy_document" "assume-service-account-secrets-policy" {
     }
     condition {
       test     = "StringEquals"
-      variable = "${module.eks.cluster_oidc_issuer_url}:sub"
+      variable = "${module.eks.oidc_provider}:sub"
       values   = [
         "system:serviceaccount:yellow-taxi:yellow-taxi:api-service-account",
         "system:serviceaccount:yellow-taxi:yellow-taxi:facade-service-account",
         "system:serviceaccount:yellow-taxi:yellow-taxi:totals-service-account"
       ]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "${module.eks.oidc_provider}:aud"
+      values   = ["sts.amazonaws.com"]
     }
   }
 }
