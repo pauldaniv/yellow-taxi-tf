@@ -103,7 +103,7 @@ data "aws_iam_policy_document" "assume-service-account-secrets-policy" {
       test     = "StringEquals"
       variable = "${module.eks.oidc_provider}:sub"
       values   = [
-        "system:serviceaccount:*:secret-accessor"
+        "system:serviceaccount:*:*-service-account"
       ]
     }
     condition {
