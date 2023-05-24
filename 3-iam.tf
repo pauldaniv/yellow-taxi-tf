@@ -6,7 +6,7 @@ module "allow_eks_access_iam_policy" {
   create_policy = true
 
   policy = jsonencode({
-    Version = "2012-10-17"
+    Version   = "2012-10-17"
     Statement = [
       {
         Action = [
@@ -53,7 +53,7 @@ module "allow_assume_eks_admins_iam_policy" {
   create_policy = true
 
   policy = jsonencode({
-    Version = "2012-10-17"
+    Version   = "2012-10-17"
     Statement = [
       {
         Action = [
@@ -75,4 +75,23 @@ module "eks_admins_iam_group" {
   create_group                      = true
   group_users                       = [module.user1_iam_user.iam_user_name]
   custom_group_policy_arns          = [module.allow_assume_eks_admins_iam_policy.arn]
+}
+
+
+resource "aws_iam_policy" "node_additional" {
+  name        = "yt-service-secrets-access-policy"
+  description = "Policy that allows kubernetes cluster services to access secrets"
+
+  policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement: [ {
+      Effect: "Allow",
+      Action: ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"],
+      Resource: ["arn:aws:secretsmanager:us-east-2:375158168967:secret:prot_yt*"]
+    } ]
+  })
+
+  tags = {
+    Project = "yellow-taxi"
+  }
 }
