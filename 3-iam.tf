@@ -78,6 +78,7 @@ module "eks_admins_iam_group" {
 }
 
 data "aws_iam_policy_document" "service-account-secrets-policy" {
+
   statement {
     effect  = "Allow"
     actions = [
@@ -118,8 +119,14 @@ resource "aws_iam_role" "eks_service_account_role" {
   }
 }
 
+resource "aws_iam_policy" "secrets_manager_policy" {
+  name        = "secrets-manager-policy"
+  description = "Allows access to Secrets Manager"
+  policy = data.aws_iam_policy_document.service-account-secrets-policy.json
+}
+
 resource "aws_iam_policy_attachment" "my_policy_attachment" {
   name       = "eks_service_account_role_attachment"
   roles      = [aws_iam_role.eks_service_account_role.name]
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+  policy_arn = aws_iam_policy.secrets_manager_policy.arn
 }
