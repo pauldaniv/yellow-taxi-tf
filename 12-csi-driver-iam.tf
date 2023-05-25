@@ -31,9 +31,3 @@ resource "aws_iam_policy_attachment" "eks_ebs_csi_driver_secrets_policy" {
   roles       = [aws_iam_role.eks_ebs_csi_driver.name]
   policy_arn = aws_iam_policy.secrets_manager_policy.arn
 }
-
-resource "aws_iam_policy_attachment" "eks_ebs_csi_driver_secrets_decrypt_policy" {
-  name       = "eks_ebs_csi_driver_secrets_decrypt_policy"
-  roles       = [aws_iam_role.eks_ebs_csi_driver.name]
-  policy_arn = aws_iam_policy.decrypt_secrets_policy.arn
-}
