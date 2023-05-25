@@ -5,7 +5,7 @@ data "aws_iam_policy_document" "csi" {
 
     condition {
       test     = "StringEquals"
-      variable = "${replace(module.eks.oidc_provider, "https://", "")}:sub"
+      variable = "${module.eks.oidc_provider}:sub"
       values   = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
     }
 
