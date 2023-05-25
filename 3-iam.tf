@@ -101,7 +101,7 @@ data "aws_iam_policy_document" "assume-service-account-secrets-policy" {
       identifiers = [module.eks.oidc_provider_arn]
     }
     condition {
-      test     = "StringEquals"
+      test     = "StringLike"
       variable = "${module.eks.oidc_provider}:sub"
       values   = [
         "system:serviceaccount:*:secret-store-service-account"
