@@ -164,7 +164,7 @@ resource "aws_iam_policy" "secrets_manager_policy" {
 }
 
 resource "aws_iam_policy" "decrypt_secrets_policy" {
-  name        = "secrets-manager-policy"
+  name        = "decrypt_secrets-manager-policy"
   description = "Allows access to Secrets Manager"
   policy = data.aws_iam_policy_document.service-account-secrets-policy.json
 }
