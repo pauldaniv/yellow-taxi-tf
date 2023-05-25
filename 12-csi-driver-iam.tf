@@ -28,12 +28,12 @@ resource "aws_iam_role_policy_attachment" "amazon_ebs_csi_driver" {
 
 resource "aws_iam_policy_attachment" "eks_ebs_csi_driver_secrets_policy" {
   name       = "eks_ebs_csi_driver_secrets_policy"
-  role       = aws_iam_role.eks_ebs_csi_driver.name
+  roles       = [aws_iam_role.eks_ebs_csi_driver.name]
   policy_arn = aws_iam_policy.secrets_manager_policy.arn
 }
 
 resource "aws_iam_policy_attachment" "eks_ebs_csi_driver_secrets_decrypt_policy" {
   name       = "eks_ebs_csi_driver_secrets_decrypt_policy"
-  role       = aws_iam_role.eks_ebs_csi_driver.name
+  roles       = [aws_iam_role.eks_ebs_csi_driver.name]
   policy_arn = aws_iam_policy.decrypt_secrets_policy.arn
 }
