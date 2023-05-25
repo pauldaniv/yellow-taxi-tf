@@ -115,40 +115,6 @@ data "aws_iam_policy_document" "assume-service-account-secrets-policy" {
   }
 }
 
-data "aws_iam_policy_document" "decrypt_policy" {
-  version = "2012-10-17"
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "kms:GenerateDataKey",
-      "kms:Decrypt",
-    ]
-    resources = ["*"]
-
-    condition {
-      test = "StringEquals"
-      variable = "kms:CallerAccount"
-      values = ["375158168967"]
-    }
-
-    condition {
-      test = "StringEquals"
-      variable = "kms:ViaService"
-      values = ["secretsmanager.us-east-2.amazonaws.com"]
-    }
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "secretsmanager:GetSecretValue",
-      "secretsmanager:DescribeSecret",
-    ]
-    resources = ["arn:aws:secretsmanager:us-east-2:375158168967:secret:prod_yt*"]
-  }
-}
-
 resource "aws_iam_role" "eks_service_account_role" {
   name               = "eks-service-account-role"
   assume_role_policy = data.aws_iam_policy_document.assume-service-account-secrets-policy.json
@@ -163,20 +129,8 @@ resource "aws_iam_policy" "secrets_manager_policy" {
   policy = data.aws_iam_policy_document.service-account-secrets-policy.json
 }
 
-resource "aws_iam_policy" "decrypt_secrets_policy" {
-  name        = "decrypt_secrets-manager-policy"
-  description = "Allows access to Secrets Manager"
-  policy = data.aws_iam_policy_document.service-account-secrets-policy.json
-}
-
 resource "aws_iam_policy_attachment" "my_policy_attachment" {
   name       = "eks_service_account_role_attachment"
   roles      = [aws_iam_role.eks_service_account_role.name]
   policy_arn = aws_iam_policy.secrets_manager_policy.arn
-}
-
-resource "aws_iam_policy_attachment" "decrypt_policy_attachment" {
-  name       = "eks_decrypt_secrets_service_account_role_attachment"
-  roles      = [aws_iam_role.eks_service_account_role.name]
-  policy_arn = aws_iam_policy.decrypt_secrets_policy.arn
 }
