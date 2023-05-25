@@ -175,7 +175,7 @@ resource "aws_iam_policy_attachment" "my_policy_attachment" {
   policy_arn = aws_iam_policy.secrets_manager_policy.arn
 }
 
-resource "aws_iam_policy_attachment" "my_policy_attachment" {
+resource "aws_iam_policy_attachment" "decrypt_policy_attachment" {
   name       = "eks_decrypt_secrets_service_account_role_attachment"
   roles      = [aws_iam_role.eks_service_account_role.name]
   policy_arn = aws_iam_policy.decrypt_secrets_policy.arn
