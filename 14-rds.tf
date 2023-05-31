@@ -17,7 +17,7 @@ resource "aws_db_subnet_group" "private" {
 
 
 data "aws_secretsmanager_secret_version" "db" {
-  secret_id = "prot_yt_db"
+  secret_id = "prod_yt_db_pass"
 }
 
 resource "aws_db_instance" "postgres" {
