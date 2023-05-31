@@ -23,6 +23,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         if: github.ref == 'refs/heads/main'
-        run: ./bin/manage_state.sh apply
+        run: ./bin/manage_state.sh destroy
 
 
