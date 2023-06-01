@@ -28,27 +28,3 @@ module "vpc" {
     Project = "yellow-taxi"
   }
 }
-#
-#resource "aws_default_security_group" "vpc_security_group" {
-#  vpc_id = module.vpc.vpc_id
-#
-#  # allow all inbound traffic
-#  ingress {
-#    protocol  = -1
-#    from_port = 0
-#    to_port   = 0
-#    self      = true
-#  }
-#
-#  # allow all outbound traffic
-#  egress {
-#    protocol    = -1
-#    from_port   = 0
-#    to_port     = 0
-#    cidr_blocks = ["0.0.0.0/0"]
-#  }
-#
-#  tags = {
-#    Name = "yellow-taxi-vpc-default-sg"
-#  }
-#}
