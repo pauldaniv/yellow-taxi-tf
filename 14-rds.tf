@@ -148,7 +148,7 @@ resource "aws_route_table_association" "private" {
 }
 
 // Create a security for the EC2 instances called "tutorial_web_sg"
-resource "aws_security_group" "tutorial_web_sg" {
+resource "aws_security_group" "public_security_group" {
   // Basic details like the name and description of the SG
   name        = "tutorial_web_sg"
   description = "Security group for tutorial web servers"
@@ -184,7 +184,7 @@ resource "aws_security_group" "tutorial_web_sg" {
 }
 
 // Create a security group for the RDS instances called "tutorial_db_sg"
-resource "aws_security_group" "tutorial_db_sg" {
+resource "aws_security_group" "private_db_sg" {
   // Basic details like the name and description of the SG
   name        = "tutorial_db_sg"
   description = "Security group for tutorial databases"
@@ -202,15 +202,15 @@ resource "aws_security_group" "tutorial_db_sg" {
   // communicates through
   ingress {
     description     = "Allow MySQL traffic from only the web sg"
-    from_port       = "3306"
-    to_port         = "3306"
+    from_port       = "5432"
+    to_port         = "5432"
     protocol        = "tcp"
-    security_groups = [aws_security_group.tutorial_web_sg.id]
+    security_groups = [module.eks.cluster_security_group_id]
   }
 
   // Here we are tagging the SG with the name "tutorial_db_sg"
   tags = {
-    Name = "tutorial_db_sg"
+    Name = "yellow-taxi-db-sg"
   }
 }
 
@@ -247,46 +247,6 @@ data "aws_secretsmanager_secret_version" "db" {
   secret_id = "prod_yt_db_pass"
 }
 
-resource "aws_security_group" "sg1" {
-  name = "sg1"
-  vpc_id =  module.vpc.vpc_id
-
-  ingress {
-    from_port = 80
-    to_port = 80
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-
-  }
-}
-
-
-resource "aws_security_group" "rdssg" {
-  name   = "rdssg"
-  vpc_id = module.vpc.vpc_id
-
-  ingress {
-    from_port       = 5432
-    to_port         = 5432
-    protocol        = "tcp"
-    security_groups = [aws_security_group.sg1.id]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
 
 resource "aws_db_instance" "postgres" {
   db_name           = "service"
@@ -300,7 +260,7 @@ resource "aws_db_instance" "postgres" {
   publicly_accessible    = true
   skip_final_snapshot    = true
   db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
-  vpc_security_group_ids = [module.vpc.default_security_group_id]
+  vpc_security_group_ids = [aws_security_group.private_db_sg.id, aws_security_group.public_security_group.id]
 }
 
 output "db_instance_url" {
