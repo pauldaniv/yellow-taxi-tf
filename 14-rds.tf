@@ -239,7 +239,7 @@ resource "aws_db_instance" "postgres" {
   publicly_accessible    = true
   skip_final_snapshot    = true
   db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
-  vpc_security_group_ids = [aws_security_group.private_db_sg.id, aws_security_group.public_security_group.id]
+  vpc_security_group_ids = [aws_security_group.private_db_sg.id]
 }
 
 output "db_instance_url" {
