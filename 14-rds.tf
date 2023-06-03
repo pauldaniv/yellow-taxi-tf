@@ -172,13 +172,13 @@ resource "aws_security_group" "db_sg" {
   // inbound rule that allows traffic from the EC2 security group
   // through TCP port 3306, which is the port that MySQL
   // communicates through
-  ingress {
-    description     = "Allow Postgres traffic from only the web sg"
-    from_port       = "5432"
-    to_port         = "5432"
-    protocol        = "tcp"
-    security_groups = [module.eks.cluster_security_group_id]
-  }
+#  ingress {
+#    description     = "Allow Postgres traffic from only the web sg"
+#    from_port       = "5432"
+#    to_port         = "5432"
+#    protocol        = "tcp"
+#    security_groups = [module.eks.cluster_security_group_id]
+#  }
 
   ingress {
     from_port   = "5432"
