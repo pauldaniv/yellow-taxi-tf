@@ -3,16 +3,7 @@ data "aws_availability_zones" "available" {
 }
 // Create an internet gateway named "tutorial_igw"
 // and attach it to the "tutorial_vpc" VPC
-resource "aws_internet_gateway" "tutorial_igw" {
-  // Here we are attaching the IGW to the
-  // tutorial_vpc VPC
-  vpc_id = module.vpc.vpc_id
 
-  // We are tagging the IGW with the name tutorial_igw
-  tags = {
-    Name = "db_igw"
-  }
-}
 
 
 // Create a group of public subnets based on the variable subnet_count.public
@@ -74,37 +65,37 @@ resource "aws_subnet" "tutorial_private_subnet" {
 
 
 // Create a public route table named "tutorial_public_rt"
-resource "aws_route_table" "tutorial_public_rt" {
-  // Put the route table in the "tutorial_vpc" VPC
-  vpc_id = module.vpc.vpc_id
-
-  // Since this is the public route table, it will need
-  // access to the internet. So we are adding a route with
-  // a destination of 0.0.0.0/0 and targeting the Internet
-  // Gateway "tutorial_igw"
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.tutorial_igw.id
-  }
-}
+#resource "aws_route_table" "tutorial_public_rt" {
+#  // Put the route table in the "tutorial_vpc" VPC
+#  vpc_id = module.vpc.vpc_id
+#
+#  // Since this is the public route table, it will need
+#  // access to the internet. So we are adding a route with
+#  // a destination of 0.0.0.0/0 and targeting the Internet
+#  // Gateway "tutorial_igw"
+#  route {
+#    cidr_block = "0.0.0.0/0"
+#    gateway_id = aws_internet_gateway.tutorial_igw.id
+#  }
+#}
 
 // Here we are going to add the public subnets to the
 // "tutorial_public_rt" route table
-resource "aws_route_table_association" "public" {
-  // count is the number of subnets we want to associate with
-  // this route table. We are using the subnet_count.public variable
-  // which is currently 1, so we will be adding the 1 public subnet
-  count = var.subnet_count.public
-
-  // Here we are making sure that the route table is
-  // "tutorial_public_rt" from above
-  route_table_id = aws_route_table.tutorial_public_rt.id
-
-  // This is the subnet ID. Since the "tutorial_public_subnet" is a
-  // list of the public subnets, we need to use count to grab the
-  // subnet element and then grab the id of that subnet
-  subnet_id = aws_subnet.tutorial_public_subnet[count.index].id
-}
+#resource "aws_route_table_association" "public" {
+#  // count is the number of subnets we want to associate with
+#  // this route table. We are using the subnet_count.public variable
+#  // which is currently 1, so we will be adding the 1 public subnet
+#  count = var.subnet_count.public
+#
+#  // Here we are making sure that the route table is
+#  // "tutorial_public_rt" from above
+#  route_table_id = aws_route_table.tutorial_public_rt.id
+#
+#  // This is the subnet ID. Since the "tutorial_public_subnet" is a
+#  // list of the public subnets, we need to use count to grab the
+#  // subnet element and then grab the id of that subnet
+#  subnet_id = aws_subnet.tutorial_public_subnet[count.index].id
+#}
 
 // Create a private route table named "tutorial_private_rt"
 resource "aws_route_table" "tutorial_private_rt" {
