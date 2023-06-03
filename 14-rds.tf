@@ -107,13 +107,13 @@ data "aws_availability_zones" "available" {
 #}
 
 // Create a private route table named "tutorial_private_rt"
-resource "aws_route_table" "tutorial_private_rt" {
-  // Put the route table in the "tutorial_VPC" VPC
-  vpc_id = module.vpc.vpc_id
-
-  // Since this is going to be a private route table,
-  // we will not be adding a route
-}
+#resource "aws_route_table" "tutorial_private_rt" {
+#  // Put the route table in the "tutorial_VPC" VPC
+#  vpc_id = module.vpc.vpc_id
+#
+#  // Since this is going to be a private route table,
+#  // we will not be adding a route
+#}
 #
 #// Here we are going to add the private subnets to the
 #// route table "tutorial_private_rt"
@@ -187,7 +187,7 @@ resource "aws_security_group" "private_db_sg" {
   // through TCP port 3306, which is the port that MySQL
   // communicates through
   ingress {
-    description     = "Allow MySQL traffic from only the web sg"
+    description     = "Allow Postgres traffic from only the web sg"
     from_port       = "5432"
     to_port         = "5432"
     protocol        = "tcp"
