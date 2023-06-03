@@ -134,38 +134,38 @@ resource "aws_route_table_association" "private" {
 }
 
 // Create a security for the EC2 instances called "tutorial_web_sg"
-resource "aws_security_group" "public_security_group" {
-  // Basic details like the name and description of the SG
-  name        = "tutorial_web_sg"
-  description = "Security group for tutorial web servers"
-  // We want the SG to be in the "tutorial_vpc" VPC
-  vpc_id      = module.vpc.vpc_id
-
-  ingress {
-    from_port   = "5432"
-    to_port     = "5432"
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  // This outbound rule is allowing all outbound traffic
-  // with the EC2 instances
-  egress {
-    description = "Allow all outbound traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  // Here we are tagging the SG with the name "tutorial_web_sg"
-  tags = {
-    Name = "yt-db-sg"
-  }
-}
+#resource "aws_security_group" "public_security_group" {
+#  // Basic details like the name and description of the SG
+#  name        = "tutorial_web_sg"
+#  description = "Security group for tutorial web servers"
+#  // We want the SG to be in the "tutorial_vpc" VPC
+#  vpc_id      = module.vpc.vpc_id
+#
+#  ingress {
+#    from_port   = "5432"
+#    to_port     = "5432"
+#    protocol    = "tcp"
+#    cidr_blocks = ["0.0.0.0/0"]
+#  }
+#
+#  // This outbound rule is allowing all outbound traffic
+#  // with the EC2 instances
+#  egress {
+#    description = "Allow all outbound traffic"
+#    from_port   = 0
+#    to_port     = 0
+#    protocol    = "-1"
+#    cidr_blocks = ["0.0.0.0/0"]
+#  }
+#
+#  // Here we are tagging the SG with the name "tutorial_web_sg"
+#  tags = {
+#    Name = "yt-db-sg"
+#  }
+#}
 
 // Create a security group for the RDS instances called "tutorial_db_sg"
-resource "aws_security_group" "private_db_sg" {
+resource "aws_security_group" "db_sg" {
   // Basic details like the name and description of the SG
   name        = "tutorial_db_sg"
   description = "Security group for tutorial databases"
@@ -187,6 +187,13 @@ resource "aws_security_group" "private_db_sg" {
     to_port         = "5432"
     protocol        = "tcp"
     security_groups = [module.eks.cluster_security_group_id]
+  }
+
+  ingress {
+    from_port   = "5432"
+    to_port     = "5432"
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
     egress {
@@ -221,7 +228,7 @@ resource "aws_db_subnet_group" "db_subnet_group" {
   // Since the db subnet group requires 2 or more subnets, we are going to
   // loop through our private subnets in "tutorial_private_subnet" and
   // add them to this db subnet group
-  subnet_ids = module.vpc.database_subnets
+  subnet_ids = [for subnet in aws_subnet.tutorial_private_subnet : subnet.id]
 }
 
 
@@ -242,7 +249,7 @@ resource "aws_db_instance" "postgres" {
   publicly_accessible    = true
   skip_final_snapshot    = true
   db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
-  vpc_security_group_ids = [aws_security_group.private_db_sg.id, aws_security_group.public_security_group.id]
+  vpc_security_group_ids = [aws_security_group.db_sg.id]
 }
 
 output "db_instance_url" {
