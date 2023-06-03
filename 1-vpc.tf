@@ -19,12 +19,20 @@ module "vpc" {
   enable_nat_gateway     = true
   single_nat_gateway     = true
   one_nat_gateway_per_az = false
+  database_subnets       = [
+    "10.0.140.0/24",
+    "10.0.141.0/24",
+    "10.0.142.0/24",
+    "10.0.143.0/24"
+  ]
 
-  enable_dns_hostnames = true
-  enable_dns_support   = true
+  create_database_subnet_group       = true
+  create_database_subnet_route_table = true
+  enable_dns_hostnames               = true
+  enable_dns_support                 = true
 
   tags = {
     Environment = "staging"
-    Project = "yellow-taxi"
+    Project     = "yellow-taxi"
   }
 }

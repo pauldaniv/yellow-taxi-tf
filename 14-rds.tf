@@ -64,65 +64,65 @@ resource "aws_subnet" "tutorial_private_subnet" {
 }
 
 
-// Create a public route table named "tutorial_public_rt"
-resource "aws_route_table" "tutorial_public_rt" {
-  // Put the route table in the "tutorial_vpc" VPC
-  vpc_id = module.vpc.vpc_id
-
-  // Since this is the public route table, it will need
-  // access to the internet. So we are adding a route with
-  // a destination of 0.0.0.0/0 and targeting the Internet
-  // Gateway "tutorial_igw"
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = module.vpc.public_internet_gateway_route_id
-  }
-}
+#// Create a public route table named "tutorial_public_rt"
+#resource "aws_route_table" "tutorial_public_rt" {
+#  // Put the route table in the "tutorial_vpc" VPC
+#  vpc_id = module.vpc.vpc_id
+#
+#  // Since this is the public route table, it will need
+#  // access to the internet. So we are adding a route with
+#  // a destination of 0.0.0.0/0 and targeting the Internet
+#  // Gateway "tutorial_igw"
+#  route {
+#    cidr_block = "0.0.0.0/0"
+#    gateway_id = module.vpc.igw_id
+#  }
+#}
 
 // Here we are going to add the public subnets to the
 // "tutorial_public_rt" route table
-resource "aws_route_table_association" "public" {
-  // count is the number of subnets we want to associate with
-  // this route table. We are using the subnet_count.public variable
-  // which is currently 1, so we will be adding the 1 public subnet
-  count = var.subnet_count.public
-
-  // Here we are making sure that the route table is
-  // "tutorial_public_rt" from above
-  route_table_id = aws_route_table.tutorial_public_rt.id
-
-  // This is the subnet ID. Since the "tutorial_public_subnet" is a
-  // list of the public subnets, we need to use count to grab the
-  // subnet element and then grab the id of that subnet
-  subnet_id = aws_subnet.tutorial_public_subnet[count.index].id
-}
+#resource "aws_route_table_association" "public" {
+#  // count is the number of subnets we want to associate with
+#  // this route table. We are using the subnet_count.public variable
+#  // which is currently 1, so we will be adding the 1 public subnet
+#  count = var.subnet_count.public
+#
+#  // Here we are making sure that the route table is
+#  // "tutorial_public_rt" from above
+#  route_table_id = module.vpc.route_table_id.tutorial_public_rt.id
+#
+#  // This is the subnet ID. Since the "tutorial_public_subnet" is a
+#  // list of the public subnets, we need to use count to grab the
+#  // subnet element and then grab the id of that subnet
+#  subnet_id = aws_subnet.tutorial_public_subnet[count.index].id
+#}
 
 // Create a private route table named "tutorial_private_rt"
-resource "aws_route_table" "tutorial_private_rt" {
-  // Put the route table in the "tutorial_VPC" VPC
-  vpc_id = module.vpc.vpc_id
-
-  // Since this is going to be a private route table,
-  // we will not be adding a route
-}
+#resource "aws_route_table" "tutorial_private_rt" {
+#  // Put the route table in the "tutorial_VPC" VPC
+#  vpc_id = module.vpc.vpc_id
+#
+#  // Since this is going to be a private route table,
+#  // we will not be adding a route
+#}
 
 // Here we are going to add the private subnets to the
 // route table "tutorial_private_rt"
-resource "aws_route_table_association" "private" {
-  // count is the number of subnets we want to associate with
-  // the route table. We are using the subnet_count.private variable
-  // which is currently 2, so we will be adding the 2 private subnets
-  count = var.subnet_count.private
-
-  // Here we are making sure that the route table is
-  // "tutorial_private_rt" from above
-  route_table_id = aws_route_table.tutorial_private_rt.id
-
-  // This is the subnet ID. Since the "tutorial_private_subnet" is a
-  // list of private subnets, we need to use count to grab the
-  // subnet element and then grab the ID of that subnet
-  subnet_id = aws_subnet.tutorial_private_subnet[count.index].id
-}
+#resource "aws_route_table_association" "private" {
+#  // count is the number of subnets we want to associate with
+#  // the route table. We are using the subnet_count.private variable
+#  // which is currently 2, so we will be adding the 2 private subnets
+#  count = var.subnet_count.private
+#
+#  // Here we are making sure that the route table is
+#  // "tutorial_private_rt" from above
+#  route_table_id = aws_route_table.tutorial_private_rt.id
+#
+#  // This is the subnet ID. Since the "tutorial_private_subnet" is a
+#  // list of private subnets, we need to use count to grab the
+#  // subnet element and then grab the ID of that subnet
+#  subnet_id = aws_subnet.tutorial_private_subnet[count.index].id
+#}
 
 // Create a security for the EC2 instances called "tutorial_web_sg"
 #resource "aws_security_group" "public_security_group" {
@@ -172,13 +172,13 @@ resource "aws_security_group" "db_sg" {
   // inbound rule that allows traffic from the EC2 security group
   // through TCP port 3306, which is the port that MySQL
   // communicates through
-#  ingress {
-#    description     = "Allow Postgres traffic from only the web sg"
-#    from_port       = "5432"
-#    to_port         = "5432"
-#    protocol        = "tcp"
-#    security_groups = [module.eks.cluster_security_group_id]
-#  }
+  #  ingress {
+  #    description     = "Allow Postgres traffic from only the web sg"
+  #    from_port       = "5432"
+  #    to_port         = "5432"
+  #    protocol        = "tcp"
+  #    security_groups = [module.eks.cluster_security_group_id]
+  #  }
 
   ingress {
     from_port   = "5432"
@@ -187,13 +187,13 @@ resource "aws_security_group" "db_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-    egress {
-      description = "Allow all outbound traffic"
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
+  egress {
+    description = "Allow all outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
   // Here we are tagging the SG with the name "tutorial_db_sg"
   tags = {
@@ -228,7 +228,8 @@ resource "aws_db_subnet_group" "db_subnet_group" {
   // Since the db subnet group requires 2 or more subnets, we are going to
   // loop through our private subnets in "tutorial_private_subnet" and
   // add them to this db subnet group
-  subnet_ids = [for subnet in aws_subnet.tutorial_private_subnet : subnet.id]
+#  subnet_ids = [for subnet in aws_subnet.tutorial_private_subnet : subnet.id]
+  subnet_ids = module.vpc.database_subnets
 }
 
 
