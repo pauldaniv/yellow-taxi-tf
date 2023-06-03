@@ -186,13 +186,21 @@ resource "aws_security_group" "private_db_sg" {
   // inbound rule that allows traffic from the EC2 security group
   // through TCP port 3306, which is the port that MySQL
   // communicates through
-  ingress {
-    description     = "Allow Postgres traffic from only the web sg"
-    from_port       = "5432"
-    to_port         = "5432"
-    protocol        = "tcp"
-    security_groups = [module.eks.cluster_security_group_id]
-  }
+#  ingress {
+#    description     = "Allow Postgres traffic from only the web sg"
+#    from_port       = "5432"
+#    to_port         = "5432"
+#    protocol        = "tcp"
+#    security_groups = [module.eks.cluster_security_group_id]
+#  }
+
+    egress {
+      description = "Allow all outbound traffic"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
 
   // Here we are tagging the SG with the name "tutorial_db_sg"
   tags = {
@@ -208,7 +216,7 @@ resource "aws_security_group_rule" "inbound_rule" {
   type                     = "ingress"
   source_security_group_id = module.eks.cluster_security_group_id
 }
-#
+
 #// Create a db subnet group named "tutorial_db_subnet_group"
 resource "aws_db_subnet_group" "db_subnet_group" {
   // The name and description of the db subnet group
