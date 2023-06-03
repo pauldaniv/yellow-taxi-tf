@@ -210,14 +210,14 @@ resource "aws_security_group" "db_sg" {
 #  source_security_group_id = module.eks.cluster_security_group_id
 #}
 
-resource "aws_security_group_rule" "example_rds_ingress" {
-  security_group_id = aws_security_group.db_sg.id
-  type              = "ingress"
-  from_port         = 5432
-  to_port           = 5432
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]  # Allow connections from any IP address
-}
+#resource "aws_security_group_rule" "example_rds_ingress" {
+#  security_group_id = aws_security_group.db_sg.id
+#  type              = "ingress"
+#  from_port         = 5432
+#  to_port           = 5432
+#  protocol          = "tcp"
+#  cidr_blocks       = ["0.0.0.0/0"]  # Allow connections from any IP address
+#}
 
 #// Create a db subnet group named "tutorial_db_subnet_group"
 resource "aws_db_subnet_group" "db_subnet_group" {
