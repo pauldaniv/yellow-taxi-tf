@@ -81,21 +81,12 @@ data "aws_availability_zones" "available" {
 
 // Here we are going to add the public subnets to the
 // "tutorial_public_rt" route table
-#resource "aws_route_table_association" "public" {
-#  // count is the number of subnets we want to associate with
-#  // this route table. We are using the subnet_count.public variable
-#  // which is currently 1, so we will be adding the 1 public subnet
-#  count = var.subnet_count.public
-#
-#  // Here we are making sure that the route table is
-#  // "tutorial_public_rt" from above
-#  route_table_id = module.vpc.public_route_table_ids
-#
-#  // This is the subnet ID. Since the "tutorial_public_subnet" is a
-#  // list of the public subnets, we need to use count to grab the
-#  // subnet element and then grab the id of that subnet
-#  subnet_id = aws_subnet.tutorial_public_subnet[count.index].id
-#}
+resource "aws_route_table_association" "db_public" {
+  count = length(module.vpc.database_subnets) > 0 ? length(module.vpc.database_subnets) : 0
+
+  route_table_id = module.vpc.public_route_table_ids[0]
+  subnet_id = element(module.vpc.database_subnets, count.index)
+}
 
 // Create a private route table named "tutorial_private_rt"
 #resource "aws_route_table" "tutorial_private_rt" {
