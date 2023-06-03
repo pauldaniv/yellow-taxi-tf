@@ -220,17 +220,17 @@ resource "aws_security_group" "db_sg" {
 #}
 
 #// Create a db subnet group named "tutorial_db_subnet_group"
-#resource "aws_db_subnet_group" "db_subnet_group" {
-#  // The name and description of the db subnet group
-#  name        = "db_subnet_group"
-#  description = "DB subnet group for db"
-#
-#  // Since the db subnet group requires 2 or more subnets, we are going to
-#  // loop through our private subnets in "tutorial_private_subnet" and
-#  // add them to this db subnet group
-##  subnet_ids = [for subnet in aws_subnet.tutorial_private_subnet : subnet.id]
-#  subnet_ids = module.vpc.database_subnets
-#}
+resource "aws_db_subnet_group" "db_subnet_group" {
+  // The name and description of the db subnet group
+  name        = "db_subnet_group"
+  description = "DB subnet group for db"
+
+  // Since the db subnet group requires 2 or more subnets, we are going to
+  // loop through our private subnets in "tutorial_private_subnet" and
+  // add them to this db subnet group
+#  subnet_ids = [for subnet in aws_subnet.tutorial_private_subnet : subnet.id]
+  subnet_ids = module.vpc.database_subnets
+}
 
 
 data "aws_secretsmanager_secret_version" "db" {
