@@ -134,40 +134,40 @@ data "aws_availability_zones" "available" {
 #}
 
 // Create a security for the EC2 instances called "tutorial_web_sg"
-resource "aws_security_group" "public_security_group" {
-  // Basic details like the name and description of the SG
-  name        = "tutorial_web_sg"
-  description = "Security group for tutorial web servers"
-  // We want the SG to be in the "tutorial_vpc" VPC
-  vpc_id      = module.vpc.vpc_id
-
-  // The first requirement we need to meet is "EC2 instances should
-  // be accessible anywhere on the internet via HTTP." So we will
-  // create an inbound rule that allows all traffic through
-  // TCP port 80.
-  ingress {
-    description = "Allow all traffic through HTTP"
-    from_port   = "5432"
-    to_port     = "5432"
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  // This outbound rule is allowing all outbound traffic
-  // with the EC2 instances
-  egress {
-    description = "Allow all outbound traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  // Here we are tagging the SG with the name "tutorial_web_sg"
-  tags = {
-    Name = "tutorial_web_sg"
-  }
-}
+#resource "aws_security_group" "public_security_group" {
+#  // Basic details like the name and description of the SG
+#  name        = "tutorial_web_sg"
+#  description = "Security group for tutorial web servers"
+#  // We want the SG to be in the "tutorial_vpc" VPC
+#  vpc_id      = module.vpc.vpc_id
+#
+#  // The first requirement we need to meet is "EC2 instances should
+#  // be accessible anywhere on the internet via HTTP." So we will
+#  // create an inbound rule that allows all traffic through
+#  // TCP port 80.
+#  ingress {
+#    description = "Allow all traffic through HTTP"
+#    from_port   = "5432"
+#    to_port     = "5432"
+#    protocol    = "tcp"
+#    cidr_blocks = ["0.0.0.0/0"]
+#  }
+#
+#  // This outbound rule is allowing all outbound traffic
+#  // with the EC2 instances
+#  egress {
+#    description = "Allow all outbound traffic"
+#    from_port   = 0
+#    to_port     = 0
+#    protocol    = "-1"
+#    cidr_blocks = ["0.0.0.0/0"]
+#  }
+#
+#  // Here we are tagging the SG with the name "tutorial_web_sg"
+#  tags = {
+#    Name = "tutorial_web_sg"
+#  }
+#}
 
 // Create a security group for the RDS instances called "tutorial_db_sg"
 resource "aws_security_group" "private_db_sg" {
