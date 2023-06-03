@@ -81,11 +81,17 @@ data "aws_availability_zones" "available" {
 
 // Here we are going to add the public subnets to the
 // "tutorial_public_rt" route table
-resource "aws_route_table_association" "db_public" {
-  count = length(module.vpc.database_subnets) > 0 ? length(module.vpc.database_subnets) : 0
 
-  route_table_id = module.vpc.public_route_table_ids[0]
-  subnet_id = element(module.vpc.database_subnets, count.index)
+
+resource "aws_route" "database_internet_gateway" {
+
+  route_table_id         = module.vpc.database_route_table_ids[0]
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = module.vpc.igw_id
+
+  timeouts {
+    create = "5m"
+  }
 }
 
 // Create a private route table named "tutorial_private_rt"
