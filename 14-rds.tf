@@ -83,16 +83,16 @@ data "aws_availability_zones" "available" {
 // "tutorial_public_rt" route table
 
 
-resource "aws_route" "database_internet_gateway" {
-
-  route_table_id         = module.vpc.database_route_table_ids[0]
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = module.vpc.igw_id
-
-  timeouts {
-    create = "5m"
-  }
-}
+#resource "aws_route" "database_internet_gateway" {
+#
+#  route_table_id         = module.vpc.database_route_table_ids[0]
+#  destination_cidr_block = "0.0.0.0/0"
+#  gateway_id             = module.vpc.igw_id
+#
+#  timeouts {
+#    create = "5m"
+#  }
+#}
 
 // Create a private route table named "tutorial_private_rt"
 #resource "aws_route_table" "tutorial_private_rt" {
