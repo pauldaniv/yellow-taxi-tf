@@ -19,9 +19,6 @@ module "vpc" {
   enable_nat_gateway     = true
   single_nat_gateway     = true
   one_nat_gateway_per_az = false
-  create_database_subnet_group = true
-
-  database_subnets = ["10.0.128.0/24", "10.0.129.0/24"]
 
   enable_dns_hostnames = true
   enable_dns_support   = true
