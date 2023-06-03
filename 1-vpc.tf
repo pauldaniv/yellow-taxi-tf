@@ -26,12 +26,13 @@ module "vpc" {
     "10.0.143.0/24"
   ]
 
-  create_database_subnet_group       = true
-  create_database_subnet_route_table = true
-  enable_dns_hostnames               = true
-  enable_dns_support                 = true
-
-  tags = {
+  create_database_subnet_group           = true
+  create_database_subnet_route_table     = true
+  create_database_internet_gateway_route = true
+  create_database_nat_gateway_route      = true
+  enable_dns_hostnames                   = true
+  enable_dns_support                     = true
+  tags                                   = {
     Environment = "staging"
     Project     = "yellow-taxi"
   }

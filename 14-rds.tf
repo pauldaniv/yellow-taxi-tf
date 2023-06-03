@@ -89,7 +89,7 @@ data "aws_availability_zones" "available" {
 #
 #  // Here we are making sure that the route table is
 #  // "tutorial_public_rt" from above
-#  route_table_id = module.vpc.route_table_id.tutorial_public_rt.id
+#  route_table_id = module.vpc.public_route_table_ids
 #
 #  // This is the subnet ID. Since the "tutorial_public_subnet" is a
 #  // list of the public subnets, we need to use count to grab the
