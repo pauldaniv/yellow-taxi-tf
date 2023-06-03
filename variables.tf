@@ -47,28 +47,28 @@ variable "settings" {
 // the public subnet. I have only included 4
 // for this tutorial, but if you need more you
 // would add them here
-variable "public_subnet_cidr_blocks" {
-  description = "Available CIDR blocks for public subnets"
-  type        = list(string)
-  default = [
-    "10.0.140.0/24",
-    "10.0.141.0/24",
-    "10.0.142.0/24",
-    "10.0.143.0/24"
-  ]
-}
+#variable "public_subnet_cidr_blocks" {
+#  description = "Available CIDR blocks for public subnets"
+#  type        = list(string)
+#  default = [
+#    "10.0.140.0/24",
+#    "10.0.141.0/24",
+#    "10.0.142.0/24",
+#    "10.0.143.0/24"
+#  ]
+#}
 
 // This variable contains the CIDR blocks for
 // the public subnet. I have only included 4
 // for this tutorial, but if you need more you
 // would add them here
-variable "private_subnet_cidr_blocks" {
-  description = "Available CIDR blocks for private subnets"
-  type        = list(string)
-  default = [
-    "10.0.160.0/24",
-    "10.0.161.0/24",
-    "10.0.162.0/24",
-    "10.0.163.0/24",
-  ]
-}
+#variable "private_subnet_cidr_blocks" {
+#  description = "Available CIDR blocks for private subnets"
+#  type        = list(string)
+#  default = [
+#    "10.0.160.0/24",
+#    "10.0.161.0/24",
+#    "10.0.162.0/24",
+#    "10.0.163.0/24",
+#  ]
+#}
