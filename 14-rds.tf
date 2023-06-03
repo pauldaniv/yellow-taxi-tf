@@ -81,21 +81,21 @@ resource "aws_subnet" "tutorial_private_subnet" {
 
 // Here we are going to add the public subnets to the
 // "tutorial_public_rt" route table
-#resource "aws_route_table_association" "public" {
-#  // count is the number of subnets we want to associate with
-#  // this route table. We are using the subnet_count.public variable
-#  // which is currently 1, so we will be adding the 1 public subnet
-#  count = var.subnet_count.public
-#
-#  // Here we are making sure that the route table is
-#  // "tutorial_public_rt" from above
-#  route_table_id = aws_route_table.tutorial_public_rt.id
-#
-#  // This is the subnet ID. Since the "tutorial_public_subnet" is a
-#  // list of the public subnets, we need to use count to grab the
-#  // subnet element and then grab the id of that subnet
-#  subnet_id = aws_subnet.tutorial_public_subnet[count.index].id
-#}
+resource "aws_route_table_association" "public" {
+  // count is the number of subnets we want to associate with
+  // this route table. We are using the subnet_count.public variable
+  // which is currently 1, so we will be adding the 1 public subnet
+  count = var.subnet_count.public
+
+  // Here we are making sure that the route table is
+  // "tutorial_public_rt" from above
+  route_table_id = aws_route_table.tutorial_public_rt.id
+
+  // This is the subnet ID. Since the "tutorial_public_subnet" is a
+  // list of the public subnets, we need to use count to grab the
+  // subnet element and then grab the id of that subnet
+  subnet_id = aws_subnet.tutorial_public_subnet[count.index].id
+}
 
 // Create a private route table named "tutorial_private_rt"
 resource "aws_route_table" "tutorial_private_rt" {
@@ -209,6 +209,15 @@ resource "aws_security_group" "db_sg" {
 #  type                     = "ingress"
 #  source_security_group_id = module.eks.cluster_security_group_id
 #}
+
+resource "aws_security_group_rule" "example_rds_ingress" {
+  security_group_id = aws_security_group.db_sg.id
+  type              = "ingress"
+  from_port         = 5432
+  to_port           = 5432
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]  # Allow connections from any IP address
+}
 
 #// Create a db subnet group named "tutorial_db_subnet_group"
 resource "aws_db_subnet_group" "db_subnet_group" {
