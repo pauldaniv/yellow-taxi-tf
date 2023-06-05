@@ -12,9 +12,9 @@ resource "aws_route_table" "db_public_route_table" {
 resource "aws_route_table_association" "db_public" {
   count = length(module.vpc.database_subnets)
 
-  subnet_id      = element(module.vpc.database_subnets, count.index)
+  subnet_id      = element(aws_subnet.database[*].id, count.index)
   route_table_id = element(
-    coalescelist(module.vpc.database_subnets), count.index
+    coalescelist(aws_route_table.db_public_route_table[*].id), count.index
   )
 }
 
