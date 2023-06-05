@@ -5,7 +5,7 @@ data "aws_availability_zones" "available" {
 resource "aws_route_table" "db_public_route_table" {
   vpc_id = module.vpc.vpc_id
   tags   = {
-    "Name" = "yellow-taxi-db-rt"
+    "Name" = "main-public-db"
   }
 }
 
@@ -41,8 +41,10 @@ resource "aws_db_subnet_group" "database" {
 variable "public_db_subnets" {
   type    = list(string)
   default = [
-    "10.0.142.0/24",
-    "10.0.143.0/24"
+    "10.0.150.0/24",
+    "10.0.151.0/24",
+    "10.0.152.0/24",
+    "10.0.153.0/24"
   ]
 }
 
@@ -56,7 +58,10 @@ resource "aws_subnet" "public_db" {
 
 
   tags = {
-    "Name" = "yellow-taxi"
+    "Name" = format(
+      "yellow-taxi-%s",
+      element(module.vpc.azs, count.index),
+    )
   }
 }
 
