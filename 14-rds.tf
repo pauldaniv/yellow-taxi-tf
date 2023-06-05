@@ -34,7 +34,7 @@ resource "aws_route" "database_internet_gateway" {
 resource "aws_db_subnet_group" "database" {
   name        = "yt_db_sb_group"
   description = "Database subnet group for database"
-  subnet_ids  = length(coalescelist(aws_subnet.public_db[*].id, [])) > 0 ? concat(module.vpc.database_subnets, aws_subnet.public_db[*].id) : module.vpc.database_subnets
+  subnet_ids  = concat(module.vpc.database_subnets, aws_subnet.public_db[*].id)
 
   tags = {
     "Name" : "yellow-taxi"
