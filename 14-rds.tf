@@ -21,7 +21,7 @@ resource "aws_route_table_association" "db_public" {
 resource "aws_db_subnet_group" "database" {
   name        = "yt_db_sb_group"
   description = "Database subnet group for database"
-  subnet_ids  = concat(module.vpc.database_subnets, aws_subnet.database)
+  subnet_ids  = concat(module.vpc.database_subnets, aws_subnet.database[*].id)
 
   tags = {
     "Name" : "yellow-taxi"
