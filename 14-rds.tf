@@ -12,16 +12,27 @@ resource "aws_route_table" "db_public_route_table" {
 resource "aws_route_table_association" "db_public" {
   count = length(module.vpc.database_subnets)
 
-  subnet_id      = element(aws_subnet.database[*].id, count.index)
+  subnet_id      = element(aws_subnet.public_db[*].id, count.index)
   route_table_id = element(
     coalescelist(aws_route_table.db_public_route_table[*].id), count.index
   )
 }
 
+resource "aws_route" "database_internet_gateway" {
+
+  route_table_id         = aws_route_table.db_public_route_table[0].id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = module.vpc.igw_id
+
+  timeouts {
+    create = "5m"
+  }
+}
+
 resource "aws_db_subnet_group" "database" {
   name        = "yt_db_sb_group"
   description = "Database subnet group for database"
-  subnet_ids  = concat(module.vpc.database_subnets, aws_subnet.database[*].id)
+  subnet_ids  = concat(module.vpc.database_subnets, aws_subnet.public_db[*].id)
 
   tags = {
     "Name" : "yellow-taxi"
@@ -35,7 +46,7 @@ variable "public_db_subnets" {
   ]
 }
 
-resource "aws_subnet" "database" {
+resource "aws_subnet" "public_db" {
   count = length(var.public_db_subnets)
 
   vpc_id               = module.vpc.vpc_id
