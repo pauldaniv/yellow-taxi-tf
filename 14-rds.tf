@@ -20,7 +20,7 @@ resource "aws_route_table_association" "db_public" {
 
 resource "aws_route" "database_internet_gateway" {
 
-  route_table_id         = aws_route_table.db_public_route_table[0].id
+  route_table_id         = aws_route_table.db_public_route_table.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = module.vpc.igw_id
 
