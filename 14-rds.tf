@@ -1,5 +1,6 @@
-data "aws_availability_zones" "available" {
-  state = "available"
+variable "db_public_access" {
+  type = bool
+  default = false
 }
 
 resource "aws_route_table" "db_public_route_table" {
@@ -49,7 +50,7 @@ variable "public_db_subnets" {
 }
 
 resource "aws_subnet" "public_db" {
-  count = length(var.public_db_subnets)
+  count = var.db_public_access ? length(var.public_db_subnets): 0
 
   vpc_id               = module.vpc.vpc_id
   cidr_block           = var.public_db_subnets[count.index]
