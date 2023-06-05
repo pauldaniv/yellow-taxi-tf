@@ -4,6 +4,7 @@ variable "db_public_access" {
 }
 
 resource "aws_route_table" "db_public_route_table" {
+  count = var.db_public_access ? 1 : 0
   vpc_id = module.vpc.vpc_id
   tags   = {
     "Name" = "main-public-db"
@@ -11,7 +12,7 @@ resource "aws_route_table" "db_public_route_table" {
 }
 
 resource "aws_route_table_association" "db_public" {
-  count = length(module.vpc.database_subnets)
+  count = var.db_public_access ? length(module.vpc.database_subnets) : 0
 
   subnet_id      = element(aws_subnet.public_db[*].id, count.index)
   route_table_id = element(
@@ -20,7 +21,7 @@ resource "aws_route_table_association" "db_public" {
 }
 
 resource "aws_route" "database_internet_gateway" {
-
+  count = var.db_public_access ? 1 : 0
   route_table_id         = aws_route_table.db_public_route_table.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = module.vpc.igw_id
@@ -33,7 +34,7 @@ resource "aws_route" "database_internet_gateway" {
 resource "aws_db_subnet_group" "database" {
   name        = "yt_db_sb_group"
   description = "Database subnet group for database"
-  subnet_ids  = concat(module.vpc.database_subnets, aws_subnet.public_db[*].id)
+  subnet_ids  = length(coalescelist(aws_subnet.public_db[*].id, [])) > 0 ? concat(module.vpc.database_subnets, aws_subnet.public_db[*].id)
 
   tags = {
     "Name" : "yellow-taxi"
