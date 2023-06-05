@@ -2,6 +2,54 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+resource "aws_route_table" "db_public_route_table" {
+  vpc_id = module.vpc.vpc_id
+  tags   = {
+    "Name" = "yellow-taxi-db-rt"
+  }
+}
+
+resource "aws_route_table_association" "db_public" {
+  count = length(module.vpc.database_subnets)
+
+  subnet_id      = element(module.vpc.database_subnets, count.index)
+  route_table_id = element(
+    coalescelist(module.vpc.database_subnets), count.index
+  )
+}
+
+resource "aws_db_subnet_group" "database" {
+  name        = "yt_db_sb_group"
+  description = "Database subnet group for database"
+  subnet_ids  = module.vpc.database_subnets
+
+  tags = {
+    "Name" : "yellow-taxi"
+  }
+}
+variable "public_db_subnets" {
+  type    = list(string)
+  default = [
+    "10.0.142.0/24",
+    "10.0.143.0/24"
+  ]
+}
+
+resource "aws_subnet" "database" {
+  count = length(var.public_db_subnets)
+
+  vpc_id               = module.vpc.vpc_id
+  cidr_block           = var.public_db_subnets[count.index]
+  availability_zone    = length(regexall("^[a-z]{2}-", element(module.vpc.azs, count.index))) > 0 ? element(module.vpc.azs, count.index) : null
+  availability_zone_id = length(regexall("^[a-z]{2}-", element(module.vpc.azs, count.index))) == 0 ? element(module.vpc.azs, count.index) : null
+
+
+  tags = {
+    "Name" = "yellow-taxi"
+  }
+}
+
+
 resource "aws_security_group" "db_sg" {
   // Basic details like the name and description of the SG
   name        = "db_sg"
