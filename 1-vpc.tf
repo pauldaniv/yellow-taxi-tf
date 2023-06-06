@@ -21,9 +21,7 @@ module "vpc" {
   one_nat_gateway_per_az = false
   database_subnets       = [
     "10.0.140.0/24",
-    "10.0.141.0/24",
-    "10.0.142.0/24",
-    "10.0.143.0/24",
+    "10.0.141.0/24"
   ]
 
   create_database_subnet_group           = false

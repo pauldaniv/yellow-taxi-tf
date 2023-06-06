@@ -1,10 +1,10 @@
 variable "db_public_access" {
-  type = bool
-  default = true
+  type    = bool
+  default = false
 }
 
 resource "aws_route_table" "db_public_route_table" {
-  count = var.db_public_access ? 1 : 0
+  count  = var.db_public_access ? 1 : 0
   vpc_id = module.vpc.vpc_id
   tags   = {
     "Name" = "main-public-db"
@@ -21,7 +21,7 @@ resource "aws_route_table_association" "db_public" {
 }
 
 resource "aws_route" "database_internet_gateway" {
-  count = var.db_public_access ? 1 : 0
+  count                  = var.db_public_access ? 1 : 0
   route_table_id         = aws_route_table.db_public_route_table[0].id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = module.vpc.igw_id
@@ -43,15 +43,13 @@ resource "aws_db_subnet_group" "database" {
 variable "public_db_subnets" {
   type    = list(string)
   default = [
-    "10.0.150.0/24",
-    "10.0.151.0/24",
-    "10.0.152.0/24",
-    "10.0.153.0/24"
+    "10.0.142.0/24",
+    "10.0.143.0/24"
   ]
 }
 
 resource "aws_subnet" "public_db" {
-  count = var.db_public_access ? length(var.public_db_subnets): 0
+  count = var.db_public_access ? length(var.public_db_subnets) : 0
 
   vpc_id               = module.vpc.vpc_id
   cidr_block           = var.public_db_subnets[count.index]
