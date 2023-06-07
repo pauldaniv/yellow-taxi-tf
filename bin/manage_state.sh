@@ -9,7 +9,7 @@ if [[ -z "$ACTION" ]]; then
   echo "Action not specified. $AVAILABLE_ACTIONS"
   exit 1
 fi
-
+echo 1
 function apply() {
   terraform init --migrate-state
   terraform apply --auto-approve
