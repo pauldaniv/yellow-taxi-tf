@@ -65,7 +65,7 @@ resource "aws_subnet" "public_db" {
   }
 }
 
-resource "aws_db_security_group" "db_sg" {
+resource "aws_security_group" "db_sg" {
   // Basic details like the name and description of the SG
   name        = "db_sg"
   description = "Security group for tutorial databases"
@@ -73,8 +73,8 @@ resource "aws_db_security_group" "db_sg" {
   vpc_id      = module.vpc.vpc_id
 
   ingress {
-    from_port   = "5432"
-    to_port     = "5432"
+    from_port   = 5432
+    to_port     = 5432
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -87,7 +87,7 @@ resource "aws_db_security_group" "db_sg" {
 resource "aws_security_group_rule" "inbound_rule" {
   from_port                = 5432
   protocol                 = "tcp"
-  security_group_id        = aws_db_security_group.db_sg.id
+  security_group_id        = aws_security_group.db_sg.id
   to_port                  = 5432
   type                     = "ingress"
   source_security_group_id = module.eks.node_security_group_id
@@ -99,7 +99,7 @@ resource "aws_security_group_rule" "eks_node_group_outbound" {
   from_port         = 5432
   to_port           = 5432
   protocol          = "tcp"
-  source_security_group_id = aws_db_security_group.db_sg.id
+  source_security_group_id = aws_security_group.db_sg.id
 }
 
 data "aws_secretsmanager_secret_version" "db" {
@@ -118,7 +118,7 @@ resource "aws_db_instance" "postgres" {
   publicly_accessible    = true
   skip_final_snapshot    = true
   db_subnet_group_name   = aws_db_subnet_group.database.name
-  vpc_security_group_ids = [aws_db_security_group.db_sg.id]
+  vpc_security_group_ids = [aws_security_group.db_sg.id]
 }
 
 output "db_instance_url" {
