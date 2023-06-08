@@ -93,10 +93,18 @@ resource "aws_security_group" "db_sg" {
   }
 }
 
+resource "aws_security_group_rule" "inbound_rule" {
+  from_port                = 5432
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.db_sg.id
+  to_port                  = 5432
+  type                     = "ingress"
+  source_security_group_id = module.eks.cluster_security_group_id
+}
+
 data "aws_secretsmanager_secret_version" "db" {
   secret_id = "prod_yt_db_pass"
 }
-
 
 resource "aws_db_instance" "postgres" {
   db_name           = "service"
