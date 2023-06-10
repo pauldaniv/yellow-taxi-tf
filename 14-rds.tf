@@ -49,7 +49,7 @@ variable "public_db_subnets" {
 }
 
 resource "aws_subnet" "public_db" {
-  count = var.db_public_access ? length(var.public_db_subnets) : 0
+  count = length(var.public_db_subnets)
 
   vpc_id               = module.vpc.vpc_id
   cidr_block           = var.public_db_subnets[count.index]
