@@ -1,6 +1,6 @@
 variable "db_public_access" {
   type    = bool
-  default = true
+  default = false
 }
 
 resource "aws_route_table" "db_public_route_table" {
@@ -14,7 +14,7 @@ resource "aws_route_table" "db_public_route_table" {
 resource "aws_route_table_association" "db_public" {
   count = var.db_public_access ? length(module.vpc.database_subnets) : 0
 
-  subnet_id      = element(aws_subnet.public_db[*].id, count.index)
+  subnet_id      = elemdent(aws_subnet.public_db[*].id, count.index)
   route_table_id = element(
     coalescelist(aws_route_table.db_public_route_table[*].id), count.index
   )
