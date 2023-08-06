@@ -23,11 +23,11 @@ module "records" {
 
   records = [
     {
-      name    = "apigateway1"
-      type    = "A"
-      alias   = {
+      name  = "apigateway1"
+      type  = "A"
+      alias = {
         name    = "d-10qxlbvagl.execute-api.eu-west-1.amazonaws.com"
-        zone_id = "ZLY8HYME6SFAD"
+        zone_id = module.zones.route53_zone_zone_id[keys(module.zones.route53_zone_zone_id)[0]]
       }
     },
     {
