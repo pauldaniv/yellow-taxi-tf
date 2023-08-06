@@ -8,10 +8,6 @@ module "zones" {
         env = "yellow-taxi"
       }
     }
-
-    "api.yellow-taxi.me" = {
-      comment = "yellow-taxi.me"
-    }
   }
 
   tags = {
