@@ -60,7 +60,7 @@ data "aws_iam_policy_document" "cert_manager_route53_policy" {
       "route53:ChangeResourceRecordSets",
       "route53:ListResourceRecordSets"
     ]
-    resources = ["arn:aws:route53:::hostedzone/${module.zones.route53_zone_zone_id}"]
+    resources = ["arn:aws:route53:::hostedzone/${module.zones.route53_zone_zone_id["promotion-api.yellow-taxi.me"]}"]
   }
 }
 
