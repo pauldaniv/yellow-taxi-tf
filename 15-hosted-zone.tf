@@ -60,13 +60,13 @@ data "aws_iam_policy_document" "cert_manager_route53_policy" {
       "route53:ChangeResourceRecordSets",
       "route53:ListResourceRecordSets"
     ]
-    resources = ["arn:aws:route53:::hostedzone/${keys(module.zones.route53_zone_zone_id)[0]}"]
+    resources = ["arn:aws:route53:::hostedzone/${module.zones.route53_zone_zone_id[0]}"]
   }
 }
 
 resource "aws_iam_role" "cert_manager_acme" {
   name               = "eks-cert-manager-acme"
-  assume_role_policy = data.aws_iam_policy_document.assume-service-account-secrets-policy.json
+  assume_role_policy = data.aws_iam_policy_document.cert_manager_route53_policy.json
   tags               = {
     Project = "yellow-taxi"
   }
