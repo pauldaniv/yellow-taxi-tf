@@ -94,8 +94,8 @@ resource "aws_iam_role" "cert_manager_acme_role" {
 }
 
 resource "aws_iam_policy" "cert_manager_policy" {
-  name        = "secrets-manager-policy"
-  description = "Allows access to Secrets Manager"
+  name        = "cert_manager_policy"
+  description = "Allows access to Route53"
   policy = data.aws_iam_policy_document.cert_manager_route53_policy.json
 }
 
