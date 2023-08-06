@@ -23,14 +23,6 @@ module "records" {
 
   records = [
     {
-      name  = "apigateway1"
-      type  = "A"
-      alias = {
-        name    = "d-10qxlbvagl.execute-api.eu-west-1.amazonaws.com"
-        zone_id = module.zones.route53_zone_zone_id[keys(module.zones.route53_zone_zone_id)[0]]
-      }
-    },
-    {
       name    = ""
       type    = "A"
       ttl     = 3600
@@ -60,7 +52,7 @@ data "aws_iam_policy_document" "cert_manager_route53_policy" {
       "route53:ChangeResourceRecordSets",
       "route53:ListResourceRecordSets"
     ]
-    resources = ["arn:aws:route53:::hostedzone/${module.zones.route53_zone_zone_id["promotion-api.yellow-taxi.me"]}"]
+    resources = ["arn:aws:route53:::hostedzone/${module.zones.route53_zone_zone_id[keys(module.zones.route53_zone_zone_id)[0]]}"]
   }
 }
 
