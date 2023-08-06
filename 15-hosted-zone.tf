@@ -100,7 +100,7 @@ resource "aws_iam_policy" "cert_manager_policy" {
 }
 
 resource "aws_iam_policy_attachment" "cert_manager_role_policy_attachment" {
-  name       = "eks_service_account_role_attachment"
+  name       = "cert_manager_role_policy_attachment"
   roles      = [aws_iam_role.cert_manager_acme_role.name]
   policy_arn = aws_iam_policy.cert_manager_policy.arn
 }
