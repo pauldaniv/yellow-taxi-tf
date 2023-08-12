@@ -3,7 +3,7 @@ module "zones" {
   version = "~> 2.0"
 
   zones = {
-    "api.yellow-taxi.me" = {
+    "app.yellow-taxi.me" = {
       tags = {
         env = "yellow-taxi"
       }
