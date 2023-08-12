@@ -69,18 +69,11 @@ data "aws_iam_policy_document" "cert_manager_route53_assume_policy" {
       identifiers = [module.eks.oidc_provider_arn]
     }
     condition {
-      test     = "ForAnyValue:StringLike"
+      test     = "ForAnyValue:StringEquals"
       variable = "${module.eks.oidc_provider}:sub"
       values   = [
-        "system:serviceaccount:*:api-service-account",
-        "system:serviceaccount:*:totals-service-account",
-        "system:serviceaccount:*:*-service-account"
+        "system:serviceaccount:cert-manager:cert-manager"
       ]
-    }
-    condition {
-      test     = "StringEquals"
-      variable = "${module.eks.oidc_provider}:aud"
-      values   = ["sts.amazonaws.com"]
     }
   }
 }
