@@ -27,7 +27,7 @@ module "records" {
       type    = "A"
       ttl     = 3600
       records = [
-        "10.1[.10.10",
+        "10.10.10.10",
       ]
     },
   ]
