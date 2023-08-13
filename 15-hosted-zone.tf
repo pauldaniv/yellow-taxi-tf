@@ -23,11 +23,11 @@ module "records" {
 
   records = [
     {
-      name    = "test"
-      type    = "A"
-      ttl     = 3600
+      name    = "api"
+      type    = "CNAME"
+      ttl     = 300
       records = [
-        "10.10.10.10",
+        "aae13c9f453ce4ba6aaf1821c1d5abb8-5a12113e74c31f64.elb.us-east-2.amazonaws.com",
       ]
     },
   ]
