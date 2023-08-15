@@ -105,8 +105,8 @@ data "aws_iam_policy_document" "assume-service-account-secrets-policy" {
       variable = "${module.eks.oidc_provider}:sub"
       values   = [
         "system:serviceaccount:*:api-service-account",
+        "system:serviceaccount:*:facade-service-account",
         "system:serviceaccount:*:totals-service-account",
-        "system:serviceaccount:*:*-service-account"
       ]
     }
     condition {
