@@ -72,16 +72,17 @@ module "eks" {
       description                   = "Allow access from control plane to webhook port of AWS load balancer controller"
     }
     egress_allow_http_to_internet = {
-      type        = "egress"
-      protocol    = "tcp"
-      from_port   = 80
-      to_port     = 80
-      description = "Allow all HTTP access to internet"
+      type                          = "egress"
+      protocol                      = "tcp"
+      from_port                     = 80
+      to_port                       = 80
+      source_cluster_security_group = true
+      description                   = "Allow all HTTP access to internet"
     }
   }
 
   tags = {
-    Project     = "yellow-taxi"
+    Project = "yellow-taxi"
   }
 }
 
