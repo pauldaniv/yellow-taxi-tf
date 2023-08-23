@@ -73,9 +73,10 @@ module "eks" {
     }
     egress_allow_http_to_internet = {
       type        = "egress"
-      protocol    = "tcp"
+      protocol    = "-1"
       from_port   = 80
       to_port     = 80
+      cidr_blocks = ["0.0.0.0/0"]
       description = "Allow all HTTP access to internet"
     }
   }
