@@ -40,11 +40,13 @@ module "eks" {
         role = "spot"
       }
 
-      taints = [{
-        key    = "market"
-        value  = "spot"
-        effect = "NO_SCHEDULE"
-      }]
+      taints = [
+        {
+          key    = "market"
+          value  = "spot"
+          effect = "NO_SCHEDULE"
+        }
+      ]
 
       instance_types = ["m6a.xlarge"]
       capacity_type  = "SPOT"
@@ -52,7 +54,7 @@ module "eks" {
   }
 
   manage_aws_auth_configmap = true
-  aws_auth_roles = [
+  aws_auth_roles            = [
     {
       rolearn  = module.eks_admins_iam_role.iam_role_arn
       username = module.eks_admins_iam_role.iam_role_name
@@ -69,18 +71,18 @@ module "eks" {
       source_cluster_security_group = true
       description                   = "Allow access from control plane to webhook port of AWS load balancer controller"
     }
-    egress_to_interned = {
-      type                          = "egress"
-      protocol                      = "tcp"
-      from_port                     = 80
-      to_port                       = 80
-      description                   = "Allow all HTTP access to internet"
+    egress_allow_http_to_internet = {
+      type        = "egress"
+      protocol    = "tcp"
+      from_port   = 80
+      to_port     = 80
+      description = "Allow all HTTP access to internet"
     }
   }
 
   tags = {
     Environment = "staging"
-    Project = "yellow-taxi"
+    Project     = "yellow-taxi"
   }
 }
 
