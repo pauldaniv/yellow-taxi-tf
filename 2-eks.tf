@@ -81,7 +81,6 @@ module "eks" {
   }
 
   tags = {
-    Environment = "staging"
     Project     = "yellow-taxi"
   }
 }
