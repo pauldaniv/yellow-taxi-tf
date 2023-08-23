@@ -27,7 +27,7 @@ module "records" {
       type    = "CNAME"
       ttl     = 300
       records = [
-        "adcb28e4dfc004225b9e6e196edf892f-9b95befb128caad1.elb.us-east-2.amazonaws.com",
+        "af00d94caab564c69aaf9d5ec63af026-83e7608e814f0fba.elb.us-east-2.amazonaws.com",
       ]
     },
   ]
