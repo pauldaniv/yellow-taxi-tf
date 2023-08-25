@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ACTION=$1
-AVAILABLE_ACTIONS="Available actions: [apply, destroy, re-create]"
+AVAILABLE_ACTIONS="Available actions: [apply, enabled, disabled]"
 
 cd "$(cd "$(dirname "$0")/.."; pwd)"
 
@@ -36,6 +36,8 @@ elif [[ "$ACTION" = "disabled" || "$GITHUB_COMMIT_MESSAGE" == *"action: destroy"
 elif [[ "$ACTION" = "enabled" && "$GITHUB_COMMIT_MESSAGE" == "action: re-create" ]]; then
   echo "Re-creating infrastructure"
   recreate
+elif [[ "$ACTION" = "enabled" || "$ACTION" = "disabled" ]]; then
+  echo "Unknown commit message action provided: $GITHUB_COMMIT_MESSAGE. Available actions: [action: apply, action: destroy, action: re-create]"
 else
   echo "Unknown action provided: $ACTION. Available actions: $AVAILABLE_ACTIONS"
 fi
