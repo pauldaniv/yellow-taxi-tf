@@ -23,7 +23,7 @@ module "records" {
 
   records = [
     {
-      name    = "apiv2"
+      name    = "iptest"
       type    = "A"
       ttl     = 300
       records = [
