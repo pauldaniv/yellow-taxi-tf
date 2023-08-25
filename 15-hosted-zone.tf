@@ -24,6 +24,14 @@ module "records" {
   records = [
     {
       name    = "apiv2"
+      type    = "A"
+      ttl     = 300
+      records = [
+        "10.10.10.10",
+      ]
+    },
+    {
+      name    = "api"
       type    = "CNAME"
       ttl     = 300
       records = [
