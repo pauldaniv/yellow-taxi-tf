@@ -33,7 +33,7 @@ if [[ "$ACTION" = "enabled" && "$GITHUB_COMMIT_MESSAGE" == *"action: apply"* ]];
 elif [[ "$ACTION" = "disabled" || "$GITHUB_COMMIT_MESSAGE" == *"action: destroy"* ]]; then
   echo "Destroying infrastructure"
   destroy
-elif [[ "$ACTION" = "enabled" && "$GITHUB_COMMIT_MESSAGE" == "action: re-create" ]]; then
+elif [[ "$ACTION" = "enabled" && "$GITHUB_COMMIT_MESSAGE" == *"action: re-create"* ]]; then
   echo "Re-creating infrastructure"
   recreate
 elif [[ "$ACTION" = "enabled" || "$ACTION" = "disabled" ]]; then
