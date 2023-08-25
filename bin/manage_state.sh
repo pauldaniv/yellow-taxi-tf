@@ -27,13 +27,13 @@ function recreate() {
   apply
 }
 
-if [[ "$ACTION" = "apply" ]]; then
+if [[ "$ACTION" = "enabled" && "$GITHUB_COMMIT_MESSAGE" == *"action: apply"* ]]; then
   echo "Creating infrastructure"
   apply
-elif [[ "$ACTION" = "destroy" ]]; then
+elif [[ "$ACTION" = "disabled" || "$GITHUB_COMMIT_MESSAGE" == *"action: destroy"* ]]; then
   echo "Destroying infrastructure"
   destroy
-elif [[ "$ACTION" = "re-create" ]]; then
+elif [[ "$ACTION" = "enabled" && "$GITHUB_COMMIT_MESSAGE" == "action: re-create" ]]; then
   echo "Re-creating infrastructure"
   recreate
 else
