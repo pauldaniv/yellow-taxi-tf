@@ -3,7 +3,7 @@ module "zones" {
   version = "~> 2.0"
 
   zones = {
-    "app.yellow-taxi.me" = {
+    "yellow-taxi.me" = {
       tags = {
         env = "yellow-taxi"
       }
@@ -23,7 +23,7 @@ module "records" {
 
   records = [
     {
-      name    = "api"
+      name    = "apiv2"
       type    = "CNAME"
       ttl     = 300
       records = [
