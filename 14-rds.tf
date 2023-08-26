@@ -34,7 +34,7 @@ resource "aws_route" "database_internet_gateway" {
   count                  = var.db_public_access ? 1 : 0
   route_table_id         = aws_route_table.db_public_route_table[0].id
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.db_igw.id
+  gateway_id             = aws_internet_gateway.db_igw[0].id
 
   timeouts {
     create = "1m"
