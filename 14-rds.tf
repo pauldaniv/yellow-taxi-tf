@@ -3,6 +3,31 @@ variable "db_public_access" {
   default = false
 }
 
+variable "public_db_subnets" {
+  type    = list(string)
+  default = [
+    "10.0.142.0/24",
+    "10.0.143.0/24"
+  ]
+}
+
+resource "aws_subnet" "public_db" {
+  count = var.db_public_access ? length(var.public_db_subnets) : 0
+
+  vpc_id               = module.vpc.vpc_id
+  cidr_block           = var.public_db_subnets[count.index]
+  availability_zone    = length(regexall("^[a-z]{2}-", element(module.vpc.azs, count.index))) > 0 ? element(module.vpc.azs, count.index) : null
+  availability_zone_id = length(regexall("^[a-z]{2}-", element(module.vpc.azs, count.index))) == 0 ? element(module.vpc.azs, count.index) : null
+
+
+  tags = {
+    "Name" = format(
+      "yellow-taxi-%s",
+      element(module.vpc.azs, count.index),
+    )
+  }
+}
+
 resource "aws_route_table" "db_public_route_table" {
   count  = var.db_public_access ? 1 : 0
   vpc_id = module.vpc.vpc_id
@@ -15,12 +40,10 @@ resource "aws_route_table_association" "db_public" {
   count = var.db_public_access ? length(module.vpc.database_subnets) : 0
 
   subnet_id      = element(aws_subnet.public_db[*].id, count.index)
-  route_table_id = element(
-    coalescelist(aws_route_table.db_public_route_table[*].id), count.index
-  )
+  route_table_id = aws_route_table.db_public_route_table[0].id
 }
 
-resource "aws_route" "database_internet_gateway" {
+resource "aws_route" "database_internet_route" {
   count                  = var.db_public_access ? 1 : 0
   route_table_id         = aws_route_table.db_public_route_table[0].id
   destination_cidr_block = "0.0.0.0/0"
@@ -40,36 +63,12 @@ resource "aws_db_subnet_group" "database" {
     "Name" : "yellow-taxi"
   }
 }
-variable "public_db_subnets" {
-  type    = list(string)
-  default = [
-    "10.0.142.0/24",
-    "10.0.143.0/24"
-  ]
-}
-
-resource "aws_subnet" "public_db" {
-  count = length(var.public_db_subnets)
-
-  vpc_id               = module.vpc.vpc_id
-  cidr_block           = var.public_db_subnets[count.index]
-  availability_zone    = length(regexall("^[a-z]{2}-", element(module.vpc.azs, count.index))) > 0 ? element(module.vpc.azs, count.index) : null
-  availability_zone_id = length(regexall("^[a-z]{2}-", element(module.vpc.azs, count.index))) == 0 ? element(module.vpc.azs, count.index) : null
 
 
-  tags = {
-    "Name" = format(
-      "yellow-taxi-%s",
-      element(module.vpc.azs, count.index),
-    )
-  }
-}
 
 resource "aws_security_group" "db_sg" {
-  // Basic details like the name and description of the SG
   name        = "db_sg"
   description = "Security group for tutorial databases"
-  // We want the SG to be in the "tutorial_vpc" VPC
   vpc_id      = module.vpc.vpc_id
 
   ingress {
@@ -85,11 +84,11 @@ resource "aws_security_group" "db_sg" {
 }
 
 resource "aws_security_group_rule" "inbound_rule" {
-  from_port                = 5432
   protocol                 = "tcp"
-  security_group_id        = aws_security_group.db_sg.id
-  to_port                  = 5432
   type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  security_group_id        = aws_security_group.db_sg.id
   source_security_group_id = module.eks.node_security_group_id
 }
 
