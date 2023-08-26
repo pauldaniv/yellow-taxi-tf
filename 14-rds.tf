@@ -1,6 +1,6 @@
 variable "db_public_access" {
   type    = bool
-  default = true
+  default = false
 }
 
 variable "public_db_subnets" {
@@ -114,7 +114,7 @@ resource "aws_db_instance" "postgres" {
   instance_class    = "db.t4g.micro"
   allocated_storage = 10
 
-  publicly_accessible    = true
+  publicly_accessible    = var.db_public_access
   skip_final_snapshot    = true
   db_subnet_group_name   = aws_db_subnet_group.database.name
   vpc_security_group_ids = [aws_security_group.db_sg.id]
