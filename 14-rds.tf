@@ -1,6 +1,6 @@
 variable "db_public_access" {
   type    = bool
-  default = true
+  default = false
 }
 
 variable "public_db_subnets" {
@@ -11,7 +11,7 @@ variable "public_db_subnets" {
   ]
 }
 
-resource "aws_subnet" "public_db" {
+resource "aws_subnet" "public_db_subnet" {
   count = var.db_public_access ? length(var.public_db_subnets) : 0
 
   vpc_id               = module.vpc.vpc_id
@@ -39,7 +39,7 @@ resource "aws_route_table" "db_public_route_table" {
 resource "aws_route_table_association" "db_public" {
   count = var.db_public_access ? length(module.vpc.database_subnets) : 0
 
-  subnet_id      = element(aws_subnet.public_db[*].id, count.index)
+  subnet_id      = element(aws_subnet.public_db_subnet[*].id, count.index)
   route_table_id = aws_route_table.db_public_route_table[0].id
 }
 
@@ -54,10 +54,10 @@ resource "aws_route" "database_internet_route" {
   }
 }
 
-resource "aws_db_subnet_group" "database" {
+resource "aws_db_subnet_group" "db_subnet_group" {
   name        = "yt_db_sb_group"
   description = "Database subnet group for database"
-  subnet_ids  = concat(module.vpc.database_subnets, aws_subnet.public_db[*].id)
+  subnet_ids  = concat(module.vpc.database_subnets, aws_subnet.public_db_subnet[*].id)
 
   tags = {
     "Name" : "yellow-taxi"
@@ -114,9 +114,9 @@ resource "aws_db_instance" "postgres" {
   instance_class    = "db.t4g.micro"
   allocated_storage = 10
 
-  publicly_accessible    = var.db_public_access
+  publicly_accessible    = true
   skip_final_snapshot    = true
-  db_subnet_group_name   = aws_db_subnet_group.database.name
+  db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
   vpc_security_group_ids = [aws_security_group.db_sg.id]
 }
 
