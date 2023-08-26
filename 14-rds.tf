@@ -27,7 +27,7 @@ resource "aws_route" "database_internet_gateway" {
   gateway_id             = module.vpc.igw_id
 
   timeouts {
-    create = "5m"
+    create = "1m"
   }
 }
 
