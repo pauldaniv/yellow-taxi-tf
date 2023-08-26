@@ -1,6 +1,6 @@
 variable "db_public_access" {
   type    = bool
-  default = false
+  default = true
 }
 
 variable "public_db_subnets" {
