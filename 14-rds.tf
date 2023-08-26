@@ -7,7 +7,7 @@ resource "aws_route_table" "db_public_route_table" {
   count  = var.db_public_access ? 1 : 0
   vpc_id = module.vpc.vpc_id
   tags   = {
-    "Name" = "main-public-db"
+    "Name" = "main-db-public"
   }
 }
 
