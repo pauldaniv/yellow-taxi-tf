@@ -64,22 +64,22 @@
 #}
 
 
-#resource "aws_security_group" "db_sg" {
-#  name        = "db_sg"
-#  description = "Security group for tutorial databases"
-#  vpc_id      = module.vpc.vpc_id
-#
-#  ingress {
-#    from_port   = 5432
-#    to_port     = 5432
-#    protocol    = "tcp"
-#    cidr_blocks = ["0.0.0.0/0"]
-#  }
-#
-#  tags = {
-#    Name = "yellow-taxi-db-sg"
-#  }
-#}
+resource "aws_security_group" "db_sg" {
+  name        = "db_sg"
+  description = "Security group for tutorial databases"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "yellow-taxi-db-sg"
+  }
+}
 
 #resource "aws_security_group_rule" "inbound_rule" {
 #  protocol                 = "tcp"
@@ -106,7 +106,7 @@ resource "aws_db_instance" "postgres" {
   publicly_accessible    = true
   skip_final_snapshot    = true
   db_subnet_group_name   = module.vpc.database_subnet_group_name
-  vpc_security_group_ids = [module.vpc.default_security_group_id]
+  vpc_security_group_ids = [aws_security_group.db_sg.id]
 }
 
 output "db_instance_url" {
