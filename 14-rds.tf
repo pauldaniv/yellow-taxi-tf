@@ -1,6 +1,6 @@
 variable "db_public_access" {
   type    = bool
-  default = true
+  default = false
 }
 
 resource "aws_route_table" "db_public_route_table" {
