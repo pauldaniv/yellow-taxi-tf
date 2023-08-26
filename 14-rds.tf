@@ -106,7 +106,7 @@ resource "aws_db_instance" "postgres" {
   publicly_accessible    = true
   skip_final_snapshot    = true
   db_subnet_group_name   = module.vpc.database_subnet_group_name
-  vpc_security_group_ids = module.vpc.default_security_group_id
+  vpc_security_group_ids = [module.vpc.default_security_group_id]
 }
 
 output "db_instance_url" {
