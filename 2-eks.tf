@@ -86,6 +86,15 @@ module "eks" {
   }
 }
 
+resource "aws_security_group_rule" "eks_node_group_outbound" {
+  security_group_id = module.eks.node_security_group_id
+  type              = "egress"
+  from_port         = 5432
+  to_port           = 5432
+  protocol          = "tcp"
+  source_security_group_id = aws_security_group.db_sg.id
+}
+
 # https://github.com/terraform-aws-modules/terraform-aws-eks/issues/2009
 data "aws_eks_cluster" "default" {
   name = module.eks.cluster_id
