@@ -81,14 +81,14 @@ resource "aws_security_group" "db_sg" {
   }
 }
 
-#resource "aws_security_group_rule" "inbound_rule" {
-#  protocol                 = "tcp"
-#  type                     = "ingress"
-#  from_port                = 5432
-#  to_port                  = 5432
-#  security_group_id        = aws_security_group.db_sg.id
-#  source_security_group_id = module.eks.node_security_group_id
-#}
+resource "aws_security_group_rule" "inbound_rule" {
+  protocol                 = "tcp"
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  security_group_id        = aws_security_group.db_sg.id
+  source_security_group_id = module.eks.node_security_group_id
+}
 
 data "aws_secretsmanager_secret_version" "db" {
   secret_id = "prod_yt_db_pass"
