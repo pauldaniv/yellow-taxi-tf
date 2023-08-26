@@ -20,21 +20,11 @@ resource "aws_route_table_association" "db_public" {
   )
 }
 
-resource "aws_internet_gateway" "db_igw" {
-  count  = var.db_public_access ? 1 : 0
-  vpc_id = module.vpc.vpc_id
-
-  tags = {
-    Name = "db_igw"
-  }
-}
-
-
 resource "aws_route" "database_internet_gateway" {
   count                  = var.db_public_access ? 1 : 0
   route_table_id         = aws_route_table.db_public_route_table[0].id
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.db_igw[0].id
+  gateway_id             = module.vpc.igw_id
 
   timeouts {
     create = "1m"
@@ -104,11 +94,11 @@ resource "aws_security_group_rule" "inbound_rule" {
 }
 
 resource "aws_security_group_rule" "eks_node_group_outbound" {
-  security_group_id        = module.eks.node_security_group_id
-  type                     = "egress"
-  from_port                = 5432
-  to_port                  = 5432
-  protocol                 = "tcp"
+  security_group_id = module.eks.node_security_group_id
+  type              = "egress"
+  from_port         = 5432
+  to_port           = 5432
+  protocol          = "tcp"
   source_security_group_id = aws_security_group.db_sg.id
 }
 
