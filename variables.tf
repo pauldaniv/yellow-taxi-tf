@@ -15,7 +15,7 @@ variable "db_public_access" {
   default = true
 }
 
-variable "public_db_subnets" {
+variable "db_subnets" {
   type    = list(string)
   default = [
     "10.0.140.0/24",
