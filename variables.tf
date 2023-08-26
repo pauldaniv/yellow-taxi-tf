@@ -12,7 +12,7 @@ variable "tags" {
 
 variable "db_public_access" {
   type    = bool
-  default = false
+  default = true
 }
 
 variable "db_subnets" {
